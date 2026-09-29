@@ -1,8 +1,8 @@
 import Image from "next/image";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { ALLOWED_IMAGE_HOSTS } from "@/lib/image-hosts";
 
-// Phải khớp next.config.ts remotePatterns — next/image throw đồng bộ (crash trang) nếu host lạ
-const ALLOWED_IMAGE_HOSTS = ["placehold.co"];
+// Host lạ làm next/image throw đồng bộ (crash trang) → chỉ render host trong danh sách dùng chung với next.config.ts
 function isAllowedImageUrl(src: string): boolean {
   try {
     return ALLOWED_IMAGE_HOSTS.includes(new URL(src).hostname);
