@@ -1,11 +1,11 @@
 import Image from "next/image";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
-import { ALLOWED_IMAGE_HOSTS } from "@/lib/image-hosts";
+import { IMAGE_ORIGIN } from "@/lib/image-hosts";
 
-// Host lạ làm next/image throw đồng bộ (crash trang) → chỉ render host trong danh sách dùng chung với next.config.ts
+// Host lạ làm next/image throw đồng bộ (crash trang) → chỉ render ảnh từ origin dùng chung với next.config.ts
 function isAllowedImageUrl(src: string): boolean {
   try {
-    return ALLOWED_IMAGE_HOSTS.includes(new URL(src).hostname);
+    return new URL(src).origin === IMAGE_ORIGIN;
   } catch {
     return false;
   }
