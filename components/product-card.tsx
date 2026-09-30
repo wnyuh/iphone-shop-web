@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ProductImage } from "@/components/product-image";
-import { formatVnd, type Product } from "@/lib/api";
+import { categoryLabel, formatVnd, type Product } from "@/lib/api";
 
 export function ProductCard({ product }: { product: Product }) {
   return (
@@ -14,7 +14,7 @@ export function ProductCard({ product }: { product: Product }) {
             alt={product.name}
             sizes="(min-width:1024px) 25vw, (min-width:640px) 50vw, 100vw"
           />
-          <Badge variant="secondary">{product.category}</Badge>
+          <Badge variant="secondary">{categoryLabel(product.category)}</Badge>
           <p className="font-semibold">{product.name}</p>
           <p>{formatVnd(product.price)}</p>
         </CardContent>
