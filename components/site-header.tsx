@@ -4,6 +4,7 @@ import { Search, ShoppingBag, User } from "lucide-react";
 import { BeeLogo } from "@/components/bee-logo";
 import { getCurrentUser } from "@/lib/get-current-user";
 import { LogoutButton } from "@/components/auth/logout-button";
+import { StoreMegaMenu } from "@/components/store-mega-menu";
 
 /**
  * Thanh điều hướng toàn trang (SiteHeader - Server Component):
@@ -28,7 +29,7 @@ export async function SiteHeader() {
 
         {/* Các mục menu chữ nhỏ, cách đều nhau */}
         <nav className="hidden md:flex items-center space-x-7 font-normal tracking-tight text-neutral-300">
-          <Link href="/" className="hover:text-white transition-colors">Cửa Hàng</Link>
+          <StoreMegaMenu />
           <Link href="#mac" className="hover:text-white transition-colors">Mac</Link>
           <Link href="#ipad" className="hover:text-white transition-colors">iPad</Link>
           <Link href="#iphone" className="hover:text-white transition-colors">iPhone</Link>

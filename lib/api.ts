@@ -14,11 +14,27 @@ const vnd = new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" 
 // Nhận cả string (từ Rails) lẫn number (tổng tiền giỏ hàng)
 export const formatVnd = (value: string | number) => vnd.format(Number(value));
 
-// Cố định, khớp seed phase 1, KHÔNG suy từ fetch (tránh gọi thêm 1 lần toàn catalog chỉ để tính tabs)
-export const CATEGORIES = ["cable", "case", "charger", "screen_protector"] as const;
+// Danh mục sản phẩm khớp dữ liệu seed mới từ Rails API
+export const CATEGORIES = [
+  "mac",
+  "iphone",
+  "ipad",
+  "apple_watch",
+  "airpods",
+  "tv_home",
+  "accessories",
+] as const;
 
-// Nhãn tiếng Việt CHỈ để hiển thị; giá trị gốc (key) vẫn là thứ gửi lên URL/API
-export const CATEGORY_LABELS: Record<(typeof CATEGORIES)[number], string> = {
+// Nhãn tiếng Việt hiển thị trên giao diện Tabs
+export const CATEGORY_LABELS: Record<string, string> = {
+  mac: "Mac",
+  iphone: "iPhone",
+  ipad: "iPad",
+  apple_watch: "Apple Watch",
+  airpods: "AirPods",
+  tv_home: "TV & Nhà",
+  accessories: "Phụ kiện",
+  // Hỗ trợ thêm các danh mục phụ kiện cũ nếu có
   cable: "Cáp sạc",
   case: "Ốp lưng",
   charger: "Củ sạc",
