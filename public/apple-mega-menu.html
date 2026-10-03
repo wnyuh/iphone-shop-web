@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Apple Style Mega Menu Demo</title>
+  <style>
+    /* 1. Reset & Typography phong cách Apple */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      background-color: #f5f5f7;
+      color: #1d1d1f;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      line-height: 1.47059;
+    }
+
+    /* 2. Thanh điều hướng chính (Navbar) */
+    .apple-nav {
+      position: sticky;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 44px;
+      background-color: rgba(22, 22, 23, 0.92);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      z-index: 1000;
+    }
+
+    .nav-container {
+      max-width: 1024px;
+      height: 100%;
+      margin: 0 auto;
+      padding: 0 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      color: #f5f5f7;
+      text-decoration: none;
+      opacity: 0.85;
+      transition: opacity 0.2s ease;
+    }
+
+    .nav-logo:hover {
+      opacity: 1;
+    }
+
+    .nav-logo svg {
+      width: 16px;
+      height: 16px;
+      fill: currentColor;
+    }
+
+    .nav-list {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      list-style: none;
+    }
+
+    .nav-item {
+      position: relative;
+    }
+
+    .nav-link {
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: -0.01em;
+      color: #d1d1d6;
+      text-decoration: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      display: inline-block;
+      padding: 10px 0;
+      transition: color 0.2s ease;
+      outline: none;
+    }
+
+    .nav-link:hover,
+    .nav-link.active {
+      color: #ffffff;
+    }
+
+    .nav-icons {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .nav-icon-btn {
+      background: none;
+      border: none;
+      color: #d1d1d6;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 0.2s ease;
+    }
+
+    .nav-icon-btn:hover {
+      color: #ffffff;
+    }
+
+    .nav-icon-btn svg {
+      width: 15px;
+      height: 15px;
+      stroke: currentColor;
+    }
+
+    /* 3. Lớp mờ ảo (Backdrop Blur Overlay) toàn trang */
+    .backdrop-overlay {
+      position: fixed;
+      top: 44px;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.32s cubic-bezier(0.16, 1, 0.3, 1),
+                  visibility 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 900;
+    }
+
+    .backdrop-overlay.is-active {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+
+    /* 4. Mega Menu Dropdown Panel */
+    .mega-menu {
+      position: absolute;
+      top: 44px;
+      left: 0;
+      width: 100%;
+      background-color: #ffffff;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.12);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transform: translateY(-8px);
+      transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                  visibility 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 950;
+      overflow: hidden;
+    }
+
+    .mega-menu.is-active {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    .mega-menu-inner {
+      max-width: 1024px;
+      margin: 0 auto;
+      padding: 44px 28px 64px 28px;
+    }
+
+    /* Bố cục 3 cột cách xa nhau */
+    .mega-menu-grid {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr;
+      gap: 60px;
+    }
+
+    /* Tiêu đề phụ chữ nhỏ xám nhạt */
+    .menu-subtitle {
+      font-size: 12px;
+      font-weight: 400;
+      color: #86868b;
+      letter-spacing: -0.01em;
+      margin-bottom: 14px;
+      user-select: none;
+    }
+
+    /* Danh sách link không có dấu chấm đầu dòng */
+    .menu-link-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    /* Cột 1 (Cột chính, chữ to, in đậm, màu đen nổi bật) */
+    .col-primary .menu-link {
+      font-size: 24px;
+      font-weight: 600;
+      letter-spacing: -0.015em;
+      color: #1d1d1f;
+      text-decoration: none;
+      line-height: 1.25;
+      display: inline-block;
+      transition: color 0.15s ease;
+    }
+
+    .col-primary .menu-link:hover {
+      color: #86868b;
+    }
+
+    /* Cột 2 & Cột 3 (Link nhỏ, nét thường) */
+    .col-secondary .menu-link {
+      font-size: 13px;
+      font-weight: 400;
+      color: #1d1d1f;
+      text-decoration: none;
+      line-height: 1.45;
+      display: inline-block;
+      transition: color 0.15s ease, text-decoration 0.15s ease;
+    }
+
+    .col-secondary .menu-link:hover {
+      color: #000000;
+      text-decoration: underline;
+    }
+
+    /* 5. Nội dung trang mẫu để thấy rõ hiệu ứng Backdrop Blur */
+    .hero-section {
+      max-width: 1024px;
+      margin: 80px auto;
+      padding: 0 24px;
+      text-align: center;
+    }
+
+    .hero-title {
+      font-size: 56px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 12px;
+      color: #1d1d1f;
+    }
+
+    .hero-subtitle {
+      font-size: 24px;
+      font-weight: 400;
+      color: #86868b;
+      margin-bottom: 30px;
+    }
+
+    .hero-card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      margin-top: 48px;
+    }
+
+    .card {
+      background: #ffffff;
+      padding: 32px 24px;
+      border-radius: 18px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+      text-align: left;
+    }
+
+    .card h3 {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .card p {
+      font-size: 14px;
+      color: #6e6e73;
+    }
+
+    /* Responsive cho màn hình nhỏ */
+    @media (max-width: 820px) {
+      .mega-menu-grid {
+        grid-template-columns: 1fr;
+        gap: 36px;
+      }
+      .col-primary .menu-link {
+        font-size: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Thanh điều hướng Apple (Navbar) -->
+  <header class="apple-nav">
+    <div class="nav-container">
+      <!-- Apple Logo -->
+      <a href="#" class="nav-logo" aria-label="Apple">
+        <svg viewBox="0 0 170 170">
+          <path d="M150.37 130.25c-2.45 5.66-5.35 10.87-8.71 15.66-4.58 6.53-8.33 11.05-11.22 13.56-4.48 4.12-9.28 6.23-14.42 6.35-3.69 0-8.14-1.05-13.32-3.18-5.19-2.12-9.97-3.17-14.34-3.17-4.58 0-9.49 1.05-14.75 3.17-5.26 2.13-9.5 3.24-12.74 3.35-4.35.13-9.16-1.9-14.42-6.08-3.7-3.04-7.69-7.79-11.97-14.24-6.42-9.67-11.55-20.73-15.39-33.19-3.84-12.46-5.76-24.16-5.76-35.1 0-14.63 3.6-26.68 10.8-36.17 7.2-9.49 16.27-14.39 27.23-14.7 4.79 0 10.36 1.34 16.71 4.02 6.35 2.68 10.23 4.08 11.64 4.21 2.22-.33 6.38-1.78 12.48-4.36 6.1-2.57 11.45-3.79 16.05-3.66 12.18.66 22.03 4.76 29.54 12.3-10.74 6.53-15.98 15.66-15.71 27.39.27 9.87 4.17 18.06 11.69 24.58 7.53 6.51 16.48 10.26 26.85 11.24-2.39 7.62-5.44 15.22-9.15 22.81zM119.22 31.84c0-7.39 2.65-14.33 7.94-20.81 5.3-6.49 11.89-10.5 19.78-12.03.22 1.3.33 2.45.33 3.44 0 7.39-2.73 14.41-8.19 21.05-5.45 6.64-12.04 10.54-19.76 11.71-.05-.88-.1-2.0-.1-3.36z" />
+        </svg>
+      </a>
+
+      <!-- Menu Items -->
+      <ul class="nav-list">
+        <li class="nav-item" id="nav-item-store">
+          <button type="button" class="nav-link" id="store-trigger" aria-expanded="false" aria-haspopup="true">
+            Cửa Hàng
+          </button>
+        </li>
+        <li class="nav-item"><a href="#mac" class="nav-link">Mac</a></li>
+        <li class="nav-item"><a href="#ipad" class="nav-link">iPad</a></li>
+        <li class="nav-item"><a href="#iphone" class="nav-link">iPhone</a></li>
+        <li class="nav-item"><a href="#watch" class="nav-link">Watch</a></li>
+        <li class="nav-item"><a href="#airpods" class="nav-link">AirPods</a></li>
+        <li class="nav-item"><a href="#tv-home" class="nav-link">TV & Nhà</a></li>
+        <li class="nav-item"><a href="#entertainment" class="nav-link">Giải Trí</a></li>
+        <li class="nav-item"><a href="#accessories" class="nav-link">Phụ Kiện</a></li>
+        <li class="nav-item"><a href="#support" class="nav-link">Hỗ Trợ</a></li>
+      </ul>
+
+      <!-- Action Icons -->
+      <div class="nav-icons">
+        <button class="nav-icon-btn" aria-label="Tìm kiếm">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </button>
+        <button class="nav-icon-btn" aria-label="Giỏ hàng">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <path d="M16 10a4 4 0 0 1-8 0"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mega Menu Panel (Nền trắng, trượt xuống) -->
+    <div class="mega-menu" id="mega-menu" role="region" aria-label="Cửa Hàng Menu">
+      <div class="mega-menu-inner">
+        <div class="mega-menu-grid">
+          
+          <!-- CỘT 1 (Bên trái, cột chính) -->
+          <div class="col-primary">
+            <p class="menu-subtitle">Mua Hàng</p>
+            <ul class="menu-link-list">
+              <li><a href="#" class="menu-link">Mua Sắm Sản Phẩm Mới Nhất</a></li>
+              <li><a href="#" class="menu-link">Mac</a></li>
+              <li><a href="#" class="menu-link">iPad</a></li>
+              <li><a href="#" class="menu-link">iPhone</a></li>
+              <li><a href="#" class="menu-link">Apple Watch</a></li>
+              <li><a href="#" class="menu-link">AirPods</a></li>
+              <li><a href="#" class="menu-link">Phụ Kiện</a></li>
+            </ul>
+          </div>
+
+          <!-- CỘT 2 (Ở giữa) -->
+          <div class="col-secondary">
+            <p class="menu-subtitle">Liên Kết Nhanh</p>
+            <ul class="menu-link-list">
+              <li><a href="#" class="menu-link">Tình Trạng Đơn Hàng</a></li>
+              <li><a href="#" class="menu-link">Apple Trade In</a></li>
+              <li><a href="#" class="menu-link">Tài Chính</a></li>
+            </ul>
+          </div>
+
+          <!-- CỘT 3 (Bên phải) -->
+          <div class="col-secondary">
+            <p class="menu-subtitle">Mua Tại Cửa Hàng Đặc Biệt</p>
+            <ul class="menu-link-list">
+              <li><a href="#" class="menu-link">Giáo Dục</a></li>
+              <li><a href="#" class="menu-link">Doanh Nghiệp</a></li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Lớp phủ mờ nền (Backdrop Blur) toàn trang -->
+  <div class="backdrop-overlay" id="backdrop-overlay"></div>
+
+  <!-- Nội dung trang minh hoạ -->
+  <main class="hero-section">
+    <h1 class="hero-title">Cửa Hàng.</h1>
+    <p class="hero-subtitle">Cách tốt nhất để mua các sản phẩm bạn yêu thích.</p>
+
+    <div class="hero-card-grid">
+      <div class="card">
+        <h3>MacBook Pro</h3>
+        <p>Sức mạnh đỉnh cao với chip Apple silicon M4 series.</p>
+      </div>
+      <div class="card">
+        <h3>iPhone 16 Pro</h3>
+        <p>Khung titan tuyệt đẹp, điều khiển camera thông minh.</p>
+      </div>
+      <div class="card">
+        <h3>iPad Pro M4</h3>
+        <p>Mỏng không tưởng, màn hình Ultra Retina XDR đột phá.</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- JavaScript điều khiển logic Hover và Click -->
+  <script>
+    (function () {
+      const storeTrigger = document.getElementById("store-trigger");
+      const megaMenu = document.getElementById("mega-menu");
+      const backdrop = document.getElementById("backdrop-overlay");
+      const navItemStore = document.getElementById("nav-item-store");
+
+      let closeTimeout = null;
+
+      // Hàm mở Mega Menu
+      function openMenu() {
+        if (closeTimeout) clearTimeout(closeTimeout);
+        megaMenu.classList.add("is-active");
+        backdrop.classList.add("is-active");
+        storeTrigger.classList.add("active");
+        storeTrigger.setAttribute("aria-expanded", "true");
+      }
+
+      // Hàm đóng Mega Menu
+      function closeMenu() {
+        megaMenu.classList.remove("is-active");
+        backdrop.classList.remove("is-active");
+        storeTrigger.classList.remove("active");
+        storeTrigger.setAttribute("aria-expanded", "false");
+      }
+
+      // 1. Sự kiện Hover (Di chuột vào)
+      navItemStore.addEventListener("mouseenter", openMenu);
+      megaMenu.addEventListener("mouseenter", openMenu);
+
+      // Rời chuột: có độ trễ ngắn (200ms) để di chuyển giữa nút và menu mượt mà
+      navItemStore.addEventListener("mouseleave", () => {
+        closeTimeout = setTimeout(closeMenu, 200);
+      });
+      megaMenu.addEventListener("mouseleave", () => {
+        closeTimeout = setTimeout(closeMenu, 200);
+      });
+
+      // 2. Sự kiện Click trên nút Cửa Hàng
+      storeTrigger.addEventListener("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (megaMenu.classList.contains("is-active")) {
+          closeMenu();
+        } else {
+          openMenu();
+        }
+      });
+
+      // 3. Click vào lớp mờ (Backdrop) để đóng menu
+      backdrop.addEventListener("click", closeMenu);
+
+      // 4. Bấm phím Escape để đóng menu
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape" && megaMenu.classList.contains("is-active")) {
+          closeMenu();
+        }
+      });
+
+      // Đóng khi click vào bất kỳ liên kết nào trong menu
+      megaMenu.querySelectorAll("a").forEach(link => {
+        link.addEventListener("click", closeMenu);
+      });
+    })();
+  </script>
+</body>
+</html>
