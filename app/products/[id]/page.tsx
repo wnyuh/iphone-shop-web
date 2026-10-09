@@ -1,11 +1,12 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getProduct } from "@/lib/get-product-by-id";
-import { categoryLabel, formatVnd } from "@/lib/api";
+import { formatVnd } from "@/lib/api";
 import { ProductImage } from "@/components/product-image";
 import { Badge } from "@/components/ui/badge";
+import { AddToCartButton } from "@/components/cart/cart-add-button";
 
-// Server Component: fetch chạy trên server, HTML đến browser đã có dữ liệu (Network tab không thấy request Rails).
+// Server Component: fetch chạy trên server
 export default async function ProductDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const product = await getProduct(id);
@@ -19,11 +20,12 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
       <div className="mt-6 grid gap-10 md:grid-cols-2">
         <ProductImage src={product.image_url} alt={product.name} sizes="(min-width:768px) 50vw, 100vw" priority />
         <div className="space-y-4">
-          <Badge variant="secondary">{categoryLabel(product.category)}</Badge>
+          <Badge variant="secondary">{product.category}</Badge>
           <h1 className="text-3xl font-semibold">{product.name}</h1>
           <p className="text-2xl">{formatVnd(product.price)}</p>
           {product.description && <p className="text-muted-foreground">{product.description}</p>}
-          {/* Phase 6: <AddToCartButton product={product} /> */}
+          {/* AddToCartButton - Client Component */}
+          <AddToCartButton product={product} />
         </div>
       </div>
     </main>
