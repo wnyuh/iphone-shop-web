@@ -29,15 +29,15 @@ export async function SiteHeader() {
         {/* Nav */}
         <nav className="hidden md:flex items-center space-x-7 font-normal tracking-tight text-neutral-300">
           <StoreMegaMenu />
-          <Link href="#mac" className="hover:text-white transition-colors">Mac</Link>
-          <Link href="#ipad" className="hover:text-white transition-colors">iPad</Link>
-          <Link href="#iphone" className="hover:text-white transition-colors">iPhone</Link>
-          <Link href="#watch" className="hover:text-white transition-colors">Watch</Link>
-          <Link href="#airpods" className="hover:text-white transition-colors">AirPods</Link>
-          <Link href="#tv-home" className="hover:text-white transition-colors">TV & Nhà</Link>
-          <Link href="#entertainment" className="hover:text-white transition-colors">Giải Trí</Link>
-          <Link href="#accessories" className="hover:text-white transition-colors">Phụ Kiện</Link>
-          <Link href="#support" className="hover:text-white transition-colors">Hỗ Trợ</Link>
+          <Link href="/store?category=mac" className="hover:text-white transition-colors">Mac</Link>
+          <Link href="/store?category=ipad" className="hover:text-white transition-colors">iPad</Link>
+          <Link href="/store?category=iphone" className="hover:text-white transition-colors">iPhone</Link>
+          <Link href="/store?category=apple_watch" className="hover:text-white transition-colors">Watch</Link>
+          <Link href="/store?category=airpods" className="hover:text-white transition-colors">AirPods</Link>
+          <Link href="/store?category=tv_home" className="hover:text-white transition-colors">TV & Nhà</Link>
+          <Link href="/#entertainment" className="hover:text-white transition-colors">Giải Trí</Link>
+          <Link href="/store?category=accessories" className="hover:text-white transition-colors">Phụ Kiện</Link>
+          <Link href="/#support" className="hover:text-white transition-colors">Hỗ Trợ</Link>
         </nav>
 
         {/* Right side: Search, Cart, User */}
