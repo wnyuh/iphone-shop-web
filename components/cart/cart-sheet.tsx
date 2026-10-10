@@ -21,15 +21,15 @@ export function CartSheet() {
     return (
         <Sheet open={isOpen} onOpenChange={setOpen}>
             {/* Trigger: Button ở Header */}
-            <SheetTrigger>
-                <Button variant="ghost" size="icon" aria-label="Giỏ hàng" className="relative">
-                    <ShoppingBag className="size-5" />
-                    {totalQuantity > 0 && (
-                        <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs text-primary-foreground">
-                            {totalQuantity > 99 ? "99+" : totalQuantity}
-                        </span>
-                    )}
-                </Button>
+            <SheetTrigger
+                render={<Button variant="ghost" size="icon" aria-label="Giỏ hàng" className="relative" />}
+            >
+                <ShoppingBag className="size-5" />
+                {totalQuantity > 0 && (
+                    <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs text-primary-foreground">
+                        {totalQuantity > 99 ? "99+" : totalQuantity}
+                    </span>
+                )}
             </SheetTrigger>
 
             {/* Drawer Content */}
@@ -58,8 +58,12 @@ export function CartSheet() {
                     {items.length === 0 ? (
                         <Button disabled className="w-full">Thanh toán</Button>
                     ) : (
-                        <Button className="w-full" onClick={() => setOpen(false)}>
-                            <Link href="/checkout">Thanh toán</Link>
+                        <Button
+                            nativeButton={false}
+                            render={<Link href="/cart" onClick={() => setOpen(false)} />}
+                            className="w-full"
+                        >
+                            Xem giỏ hàng
                         </Button>
                     )}
                 </SheetFooter>
