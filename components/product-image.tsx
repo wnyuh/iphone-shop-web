@@ -18,13 +18,13 @@ function isAllowedImageUrl(src: string): boolean {
   }
 }
 
-type Props = { src: string | null; alt: string; sizes: string; priority?: boolean };
+type Props = { src: string | null; alt: string; sizes: string; priority?: boolean; fit?: "cover" | "contain" };
 
-export function ProductImage({ src, alt, sizes, priority }: Props) {
+export function ProductImage({ src, alt, sizes, priority, fit = "cover" }: Props) {
   return (
-    <AspectRatio ratio={1} className="overflow-hidden rounded-xl bg-gradient-to-b from-neutral-100 to-neutral-200/80 flex items-center justify-center relative">
+    <AspectRatio ratio={1} className={`overflow-hidden rounded-xl flex items-center justify-center relative ${fit === "contain" ? "bg-white border border-neutral-200/70" : "bg-gradient-to-b from-neutral-100 to-neutral-200/80"}`}>
       {src && isAllowedImageUrl(src) ? (
-        <Image src={src} alt={alt} fill sizes={sizes} priority={priority} className="object-cover" />
+        <Image src={src} alt={alt} fill sizes={sizes} priority={priority} className={fit === "contain" ? "object-contain p-3" : "object-cover"} />
       ) : (
         <div className="flex flex-col items-center justify-center gap-2 text-neutral-400 p-4 text-center select-none">
           <BeeLogo className="w-10 h-10 text-neutral-400/80" />
