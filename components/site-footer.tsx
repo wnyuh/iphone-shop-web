@@ -8,7 +8,7 @@ import Link from "next/link";
  */
 export function SiteFooter() {
   return (
-    <footer className="bg-[#f5f5f7] text-[#6e6e73] text-[12px] leading-relaxed pt-8 pb-12 border-t border-neutral-300 mt-auto">
+    <footer id="support" className="bg-[#f5f5f7] text-[#6e6e73] text-[12px] leading-relaxed pt-8 pb-12 border-t border-neutral-300 mt-auto">
       <div className="max-w-[1024px] mx-auto px-4 space-y-4">
         {/* Đoạn text lưu ý nhỏ bên trên */}
         <div className="space-y-2 border-b border-neutral-300/70 pb-6 text-[11px] text-[#86868b]">
@@ -29,15 +29,14 @@ export function SiteFooter() {
           <div className="space-y-2">
             <h5 className="font-semibold text-neutral-900">Mua Sắm Và Tìm Hiểu</h5>
             <ul className="space-y-1.5">
-              <li><Link href="/" className="hover:text-neutral-900">Cửa Hàng</Link></li>
-              <li><Link href="#mac" className="hover:text-neutral-900">Mac</Link></li>
-              <li><Link href="#ipad" className="hover:text-neutral-900">iPad</Link></li>
-              <li><Link href="#iphone" className="hover:text-neutral-900">iPhone</Link></li>
-              <li><Link href="#watch" className="hover:text-neutral-900">Watch</Link></li>
-              <li><Link href="#airpods" className="hover:text-neutral-900">AirPods</Link></li>
-              <li><Link href="#tv-home" className="hover:text-neutral-900">TV & Nhà</Link></li>
-              <li><Link href="#" className="hover:text-neutral-900">AirTag</Link></li>
-              <li><Link href="#" className="hover:text-neutral-900">Phụ Kiện</Link></li>
+              <li><Link href="/store" className="hover:text-neutral-900">Cửa Hàng</Link></li>
+              <li><Link href="/store?category=mac" className="hover:text-neutral-900">Mac</Link></li>
+              <li><Link href="/store?category=ipad" className="hover:text-neutral-900">iPad</Link></li>
+              <li><Link href="/store?category=iphone" className="hover:text-neutral-900">iPhone</Link></li>
+              <li><Link href="/store?category=apple_watch" className="hover:text-neutral-900">Watch</Link></li>
+              <li><Link href="/store?category=airpods" className="hover:text-neutral-900">AirPods</Link></li>
+              <li><Link href="/store?category=tv_home" className="hover:text-neutral-900">TV & Nhà</Link></li>
+              <li><Link href="/store?category=accessories" className="hover:text-neutral-900">Phụ Kiện</Link></li>
             </ul>
           </div>
 

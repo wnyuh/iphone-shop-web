@@ -278,7 +278,7 @@ export default function HomePage() {
       {/* ========================================================= */}
       {/* 4. KHỐI CAROUSEL (APPLE TV+)                              */}
       {/* ========================================================= */}
-      <section className="py-14 bg-black overflow-hidden">
+      <section id="entertainment" className="py-14 bg-black overflow-hidden">
         <div className="max-w-[1280px] mx-auto px-4 mb-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <BeeLogo className="w-5 h-5 text-white" />

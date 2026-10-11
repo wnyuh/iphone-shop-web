@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { CategoryFilter } from "@/components/category-filter";
 import { ProductGrid } from "@/components/product-grid";
@@ -33,8 +33,13 @@ export function ProductCatalog() {
       [router, pathname, searchParams],
   );
 
-  // Tìm kiếm: state cục bộ, KHÔNG lên URL
+  // Tìm kiếm: state cục bộ, KHÔNG lên URL. Chỉ gửi request sau khi ngừng gõ 300ms
   const [q, setQ] = useState("");
+  const [debouncedQ, setDebouncedQ] = useState("");
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedQ(q.trim()), 300);
+    return () => clearTimeout(timer);
+  }, [q]);
 
   return (
       <div className="space-y-6">
@@ -47,7 +52,7 @@ export function ProductCatalog() {
             key={`${category}|${sort}`}
             category={category || undefined}
             sort={sort}
-            q={q}
+            q={debouncedQ}
             onClearSearch={() => setQ("")}
         />
       </div>

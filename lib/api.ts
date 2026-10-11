@@ -14,11 +14,27 @@ const vnd = new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" 
 // Nhận cả string (từ Rails) lẫn number (tổng tiền giỏ hàng)
 export const formatVnd = (value: string | number) => vnd.format(Number(value));
 
-// Cố định, khớp seed phase 1, KHÔNG suy từ fetch (tránh gọi thêm 1 lần toàn catalog chỉ để tính tabs)
-export const CATEGORIES = ["cable", "case", "charger", "screen_protector"] as const;
+// Danh mục sản phẩm khớp dữ liệu seed mới từ Rails API
+export const CATEGORIES = [
+  "mac",
+  "iphone",
+  "ipad",
+  "apple_watch",
+  "airpods",
+  "tv_home",
+  "accessories",
+] as const;
 
-// Nhãn tiếng Việt CHỈ để hiển thị; giá trị gốc (key) vẫn là thứ gửi lên URL/API
-export const CATEGORY_LABELS: Record<(typeof CATEGORIES)[number], string> = {
+// Nhãn tiếng Việt hiển thị trên giao diện Tabs
+export const CATEGORY_LABELS: Record<string, string> = {
+  mac: "Mac",
+  iphone: "iPhone",
+  ipad: "iPad",
+  apple_watch: "Apple Watch",
+  airpods: "AirPods",
+  tv_home: "TV & Nhà",
+  accessories: "Phụ kiện",
+  // Hỗ trợ thêm các danh mục phụ kiện cũ nếu có
   cable: "Cáp sạc",
   case: "Ốp lưng",
   charger: "Củ sạc",
@@ -39,12 +55,13 @@ export const SORT_OPTIONS = [
 const SORT_TO_RAILS: Record<string, string> = { "price-asc": "price", "price-desc": "-price" };
 
 export async function fetchProducts(
-    opts: { category?: string; sort?: string } = {},
+    opts: { category?: string; sort?: string; q?: string } = {},
 ): Promise<Product[]> {
   const params = new URLSearchParams({ per_page: "100" });
   if (opts.category) params.set("category", opts.category);
   const railsSort = opts.sort && SORT_TO_RAILS[opts.sort];
   if (railsSort) params.set("sort", railsSort); // chỉ gửi giá trị nằm trong whitelist
+  if (opts.q) params.set("q", opts.q);
   const res = await fetch(`/api/products?${params}`);
   const body = await res.json();
   if (!res.ok) throw new Error(body.error ?? `Lỗi ${res.status}`);

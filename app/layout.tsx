@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
+import { CartProvider } from "@/components/cart/cart-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -21,19 +22,18 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html
-      lang="vi"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
+    <html lang="vi" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col bg-white text-neutral-900">
-        {/* Header toàn trang dùng chung cho mọi trang */}
-        <SiteHeader />
+        <CartProvider>
+          {/* Header toàn trang dùng chung cho mọi trang */}
+          <SiteHeader />
 
-        {/* Nội dung riêng biệt của từng trang được render ở đây */}
-        <div className="flex-1 flex flex-col">{children}</div>
+          {/* Nội dung riêng biệt của từng trang được render ở đây */}
+          <div className="flex-1 flex flex-col">{children}</div>
 
-        {/* Footer toàn trang dùng chung cho mọi trang */}
-        <SiteFooter />
+          {/* Footer toàn trang dùng chung cho mọi trang */}
+          <SiteFooter />
+        </CartProvider>
       </body>
     </html>
   );
