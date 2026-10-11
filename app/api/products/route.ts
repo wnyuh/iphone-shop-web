@@ -4,7 +4,7 @@ import { railsFetch } from "@/lib/rails-server";
 // Proxy: browser → /api/products?... → Rails /products?... (không dính CORS)
 // Whitelist: chỉ forward param Rails hỗ trợ, KHÔNG re-serialize nguyên searchParams —
 // tránh mọi param Rails thêm sau này vô tình lộ ra qua proxy mà không được review.
-const ALLOWED_PARAMS = ["category", "sort", "per_page", "page"] as const;
+const ALLOWED_PARAMS = ["category", "sort", "per_page", "page", "q"] as const;
 
 export async function GET(request: NextRequest) {
   const incoming = request.nextUrl.searchParams;

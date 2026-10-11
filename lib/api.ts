@@ -55,12 +55,13 @@ export const SORT_OPTIONS = [
 const SORT_TO_RAILS: Record<string, string> = { "price-asc": "price", "price-desc": "-price" };
 
 export async function fetchProducts(
-    opts: { category?: string; sort?: string } = {},
+    opts: { category?: string; sort?: string; q?: string } = {},
 ): Promise<Product[]> {
   const params = new URLSearchParams({ per_page: "100" });
   if (opts.category) params.set("category", opts.category);
   const railsSort = opts.sort && SORT_TO_RAILS[opts.sort];
   if (railsSort) params.set("sort", railsSort); // chỉ gửi giá trị nằm trong whitelist
+  if (opts.q) params.set("q", opts.q);
   const res = await fetch(`/api/products?${params}`);
   const body = await res.json();
   if (!res.ok) throw new Error(body.error ?? `Lỗi ${res.status}`);

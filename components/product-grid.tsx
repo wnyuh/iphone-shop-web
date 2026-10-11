@@ -1,11 +1,9 @@
 "use client";
 
-import { useMemo } from "react";
 import { ProductCard } from "@/components/product-card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useProducts } from "@/hooks/use-products";
-import { normalizeText } from "@/lib/normalize-vietnamese-text";
 
 type Props = {
     category?: string;
@@ -15,13 +13,7 @@ type Props = {
 };
 
 export function ProductGrid({ category, sort, q, onClearSearch }: Props) {
-    const { products, loading, error } = useProducts(category, sort);
-
-    const needle = normalizeText(q);
-    const visible = useMemo(
-        () => (needle ? products.filter((p) => normalizeText(p.name).includes(needle)) : products),
-        [products, needle],
-    );
+    const { products, loading, error } = useProducts(category, sort, q);
 
     if (error) return <p className="text-destructive">{error}</p>;
     if (loading) {
@@ -33,7 +25,7 @@ export function ProductGrid({ category, sort, q, onClearSearch }: Props) {
             </div>
         );
     }
-    if (needle && visible.length === 0) {
+    if (q && products.length === 0) {
         return (
             <div>
                 <p>Không tìm thấy sản phẩm cho “{q}”</p>
@@ -48,7 +40,7 @@ export function ProductGrid({ category, sort, q, onClearSearch }: Props) {
     }
     return (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {visible.map((p) => (
+            {products.map((p) => (
                 <ProductCard key={p.id} product={p} />
             ))}
         </div>

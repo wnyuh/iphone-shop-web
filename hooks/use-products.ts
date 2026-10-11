@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { fetchProducts, type Product } from "@/lib/api";
 
-export function useProducts( category?: string, sort?: string ) {
+export function useProducts(category?: string, sort?: string, q?: string) {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   useEffect(() => {
     let ignore = false; // response về sau khi effect đã cleanup → bỏ qua
-    fetchProducts({ category, sort })
+    fetchProducts({ category, sort, q })
       .then((data) => {
         if (!ignore) setProducts(data);
       })
@@ -20,6 +20,6 @@ export function useProducts( category?: string, sort?: string ) {
     return () => {
       ignore = true;
     };
-  }, [category, sort]);
+  }, [category, sort, q]);
   return { products, loading, error };
 }
